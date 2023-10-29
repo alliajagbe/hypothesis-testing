@@ -30,23 +30,25 @@ def powerCurveNormal(mus, sigma, replications, n, alpha):
         # calculating the number of significant tests
         significant_tests.append(np.sum(results)/replications)
 
-    print(significant_tests)
-    # plotting the power curve
-    plt.plot(mus, significant_tests)
+    return significant_tests
+
+def plotResults(mus, significant_tests, sigma, n):
+    plt.plot(mus, significant_tests, color='blue', marker='o', linestyle='dashed')
     plt.title(f"Power Curve for Normal Distribution with sigma = {sigma} and n = {n}")
     plt.xlabel("mu")
     plt.ylabel("Power")
     plt.show()
 
+
+
 mus = np.arange(4.5, 5.5, 0.1)
-
 sigma = 1
-
 replications = 1000
 n = 100
 alpha = 0.05
 
-powerCurveNormal(mus, sigma, replications, n, alpha)
+st = powerCurveNormal(mus, sigma, replications, n, alpha)
+plotResults(mus, st, sigma, n)
 
 
 
