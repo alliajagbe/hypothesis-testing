@@ -28,11 +28,12 @@ def powerCurveNormal(mus, sigma, replications, n, alpha, true_mu):
 
     return significant_tests
 
-def plotResults(mus, significant_tests, sigma, n):
+def plotResults(mus, significant_tests, n):
     plt.plot(mus, significant_tests, label=f"n = {n}")
     plt.title(f"Power Curve for Normal Distribution")
     plt.xlabel("mu")
     plt.ylabel("Power")
+    plt.savefig("powerCurveNormal.png")
 
 
 
@@ -45,7 +46,7 @@ true_mu = 5
 sizes = [10, 20, 100]
 for i in sizes:
     st = powerCurveNormal(mus, sigma, replications, i, alpha, true_mu)
-    plotResults(mus, st, sigma, i)
+    plotResults(mus, st, i)
 plt.legend()
 plt.show()
 
@@ -77,11 +78,12 @@ def powerCurveMixtureOfNormals(mus, sigma1, sigma2, replications, n, alpha, true
 
     return significant_tests
 
-def plotResults(mus, significant_tests, sigma1, sigma2, n):
+def plotResults(mus, significant_tests, n):
     plt.plot(mus, significant_tests, label=f"n = {n}")
     plt.title(f"Power Curve for Mixture of Normal Distributions")
     plt.xlabel("mu")
     plt.ylabel("Power")
+    plt.savefig("powerCurveMixtureOfNormals.png")
 
 mus = np.arange(4.5, 6.5, 0.1)
 sigma1 = 1
@@ -93,7 +95,7 @@ true_mu = 5
 sizes = [10, 20, 100]
 for i in sizes:
     st = powerCurveMixtureOfNormals(mus, sigma1, sigma2, replications, i, alpha, true_mu)
-    plotResults(mus, st, sigma1, sigma2, i)
+    plotResults(mus, st, i)
 plt.legend()
 plt.show()
 
