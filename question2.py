@@ -45,7 +45,7 @@ def plotResults(n, replications, ax, colors):
 
 
 
-sizes = [10, 20, 100]
+sizes = [20, 30, 100]
 replications = 1000
 colors = ["red", "green", "blue"]
 
