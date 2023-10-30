@@ -2,15 +2,21 @@ import numpy as np
 import matplotlib.pyplot as plt
 import math
 import scipy.stats as stats
+from scipy.stats import norm
+from scipy.stats import skew
 
-def powerCurve(n, replications, alpha, true_mu, sigma1, sigma2):
+
+def skewness(X):
+    n = len(X)
+    numerator = (1/n) * np.sum((X - np.mean(X))**3)
+    denominator = ((1/n) * np.sum((X - np.mean(X))**2))**(3/2)
+    return numerator/denominator
+
+def powerCurve(n, replications, alpha, true_mu, sigma1, sigma2, epsilons, skewness):
 
     significant_tests = []
-    t_tab = stats.t.ppf(1 - alpha, n - 1)
 
-    epsilon = np.arange(0, 1, 0.1)
-
-    for e in epsilon:
+    for e in epsilons:
         rejected_count = 0
 
         for _ in range(replications):
@@ -19,10 +25,15 @@ def powerCurve(n, replications, alpha, true_mu, sigma1, sigma2):
             else:
                 sample = np.random.normal(true_mu, sigma1, n)
             
-            t, _ = stats.ttest_1samp(sample, true_mu)
+            sk = skewness(sample)
+            
+            # Checking if the null hypothesis is rejected cdf 
+            if sk > 0: 
+                p_value = 1 - norm.cdf(sk)
+            else:
+                p_value = norm.cdf(sk)
 
-            # Checking if the null hypothesis is rejected using the t value
-            if t > t_tab or t < -t_tab:
+            if p_value < alpha:
                 rejected_count += 1
 
         # Calculating the proportion of significant tests
@@ -32,7 +43,26 @@ def powerCurve(n, replications, alpha, true_mu, sigma1, sigma2):
 
     return significant_tests
 
-powerCurve(30, 1000, 0.01, 0, 1, 10)
+
+def plotResults(epsilons, significant_tests, n):
+    plt.plot(epsilons, significant_tests, label=f"n = {n}")
+    plt.title(f"Power Curve for Mixture of Normals")
+    plt.xlabel("epsilon")
+    plt.ylabel("Power")
+    plt.show()
+
+epsilons = np.linspace(0, 1, 100)
+sigma1 = 1
+sigma2 = 10
+replications = 1000
+alpha = 0.01
+true_mu = 0
+size = 30
+
+st = powerCurve(size, replications, alpha, true_mu, sigma1, sigma2, epsilons, skewness)
+plotResults(epsilons, st, size)
+
+
 
 
 

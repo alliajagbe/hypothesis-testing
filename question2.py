@@ -7,7 +7,7 @@ import scipy.stats as stats
 
 def b1(n, X):
     numerator = (1/n) * np.sum((X - np.mean(X))**3)
-    denominator = (1/n) * np.sum((X - np.mean(X))**2)**(3/2)
+    denominator = ((1/n) * np.sum((X - np.mean(X))**2))**(3/2)
     return numerator/denominator
 
 def normalDistribution(n):
@@ -21,7 +21,7 @@ def samplingDistribution(n, replications):
         b1s.append(b1(n, X))
     return b1s
 
-def computeMeanAndStandardDeviation(n, replications):
+def computeMeanAndStandardError(n, replications):
     b1s = samplingDistribution(n, replications)
     return np.mean(b1s), np.std(b1s)
 
@@ -35,7 +35,7 @@ def theoreticalMeanAndStandardDeviation(n):
 
 def plotResults(n, replications, ax, colors):
     b1s = samplingDistribution(n, replications)
-    mean, std = computeMeanAndStandardDeviation(n, replications)
+    mean, std = computeMeanAndStandardError(n, replications)
     t_mean, t_std = theoreticalMeanAndStandardDeviation(n)
     ax.hist(b1s, bins=20, density=True, label=f"n = {n}\nmean = {round(mean, 3)}\nstd = {round(std, 3)}\ntheoretical mean = {round(t_mean, 3)}\ntheoretical std = {round(t_std, 3)}", color = colors[i])
     ax.set_title(f"Sampling Distribution of b1")
