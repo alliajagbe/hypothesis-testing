@@ -21,14 +21,39 @@ def samplingDistribution(n, replications):
         b1s.append(b1(n, X))
     return b1s
 
-def plotResults(n, replications):
+def computeMeanAndStandardDeviation(n, replications):
     b1s = samplingDistribution(n, replications)
-    plt.hist(b1s, bins=10)
-    plt.title(f"Distribution of b1 for n = {n}")
-    plt.xlabel("b1")
-    plt.ylabel("Frequency")
-    plt.show()
+    return np.mean(b1s), np.std(b1s)
 
-n = 20
+def theoreticalMeanAndStandardDeviation(n):
+    mean = 0
+    numerator = 6*(n-2)
+    denominator = (n+1)*(n+3)
+    std = np.sqrt(numerator/denominator)
+    return mean, std
+
+
+def plotResults(n, replications, ax, colors):
+    b1s = samplingDistribution(n, replications)
+    mean, std = computeMeanAndStandardDeviation(n, replications)
+    t_mean, t_std = theoreticalMeanAndStandardDeviation(n)
+    ax.hist(b1s, bins=20, density=True, label=f"n = {n}\nmean = {round(mean, 3)}\nstd = {round(std, 3)}\ntheoretical mean = {round(t_mean, 3)}\ntheoretical std = {round(t_std, 3)}", color = colors[i])
+    ax.set_title(f"Sampling Distribution of b1")
+    ax.set_xlabel("b1")
+    ax.set_ylabel("Density")
+    ax.legend(loc='best')
+
+
+
+sizes = [10, 20, 100]
 replications = 1000
-plotResults(n, replications)
+colors = ["red", "green", "blue"]
+
+
+
+# creating a canvas of 1x3 subplots
+fig, axs = plt.subplots(1, 3, figsize=(15, 5))
+
+for i in range(len(sizes)):
+    plotResults(sizes[i], replications, axs[i], colors)
+plt.show()
