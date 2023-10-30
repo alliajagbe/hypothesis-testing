@@ -74,6 +74,28 @@ def powerCurveMixtureOfNormals(mus, sigma1, sigma2, replications, n, alpha, true
 
         print(f"mu = {mu}, proportion of significant tests = {rejected_count / replications}")
 
+    return significant_tests
+
+def plotResults(mus, significant_tests, sigma1, sigma2, n):
+    plt.plot(mus, significant_tests, label=f"n = {n}")
+    plt.title(f"Power Curve for Mixture of Normal Distributions")
+    plt.xlabel("mu")
+    plt.ylabel("Power")
+
+mus = np.arange(4.5, 6.5, 0.1)
+sigma1 = 1
+sigma2 = np.sqrt(25)
+replications = 1000
+alpha = 0.05
+true_mu = 5
+
+sizes = [10, 20, 100]
+for i in sizes:
+    st = powerCurveMixtureOfNormals(mus, sigma1, sigma2, replications, i, alpha, true_mu)
+    plotResults(mus, st, sigma1, sigma2, i)
+plt.legend()
+plt.show()
+
 
 
 
