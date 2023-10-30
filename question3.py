@@ -20,20 +20,16 @@ def powerCurve(n, replications, alpha, true_mu, sigma1, sigma2, epsilons, skewne
         rejected_count = 0
 
         for _ in range(replications):
-            if np.random.uniform() < e:
-                sample = np.random.normal(true_mu, sigma2, n)
-            else:
-                sample = np.random.normal(true_mu, sigma1, n)
+            
+            sample1 = np.random.normal(true_mu, sigma1, n)
+            sample2 = np.random.normal(true_mu, sigma2, n)
+            mask = np.random.choice([0, 1], size=n, p=[1 - e, e])
+            sample = np.where(mask, sample2, sample1)
             
             sk = skewness(sample)
             
             # Checking if the null hypothesis is rejected cdf 
-            if sk > 0: 
-                p_value = 1 - norm.cdf(sk)
-            else:
-                p_value = norm.cdf(sk)
-
-            if p_value < alpha:
+            if np.abs(sk) > norm.ppf(1 - alpha/2):
                 rejected_count += 1
 
         # Calculating the proportion of significant tests
@@ -51,7 +47,7 @@ def plotResults(epsilons, significant_tests, n):
     plt.ylabel("Power")
     plt.show()
 
-epsilons = np.linspace(0, 1, 100)
+epsilons = np.linspace(0, 1, 10)
 sigma1 = 1
 sigma2 = 10
 replications = 1000

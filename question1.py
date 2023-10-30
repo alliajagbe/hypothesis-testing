@@ -58,10 +58,11 @@ def powerCurveMixtureOfNormals(mus, sigma1, sigma2, replications, n, alpha, true
         rejected_count = 0
 
         for _ in range(replications):
-            if np.random.uniform() < 0.9:
-                sample = np.random.normal(mu, sigma1, n)
-            else:
-                sample = np.random.normal(mu, sigma2, n)
+            
+            sample1 = np.random.normal(mu, sigma1, n)
+            sample2 = np.random.normal(mu, sigma2, n)
+            mask = np.random.choice([0, 1], size=n, p=[0.9, 0.1])
+            sample = np.where(mask, sample2, sample1)
 
             t, _ = stats.ttest_1samp(sample, true_mu)
 
